@@ -8,6 +8,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")
@@ -26,7 +30,16 @@ public class SwaggerController {
 
     @PostMapping("/posts")
     public SwaggerDTO addPosts(@RequestBody SwaggerDTO swaggerDTO) {
+        String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if (swaggerDTO.getCreateDate() == null
+                || swaggerDTO.getCreateDate().isBlank()
+                || swaggerDTO.getCreateDate().equals("YYYY-MM-DD HH:mm:ss")) {
+            swaggerDTO.setCreateDate(today);
+        }
         log.info("Received DTO: {}", swaggerDTO);
+        log.info("제목 : {}", swaggerDTO.getTitle());
+        log.info("내용 : {}", swaggerDTO.getContent());
+        log.info("날짜 : {}", swaggerDTO.getCreateDate());
         return swaggerDTO;
     }
 }
